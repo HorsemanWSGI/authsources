@@ -1,5 +1,6 @@
 from authsources.abc.source import Source
 from authsources.abc.identity import User, UserID
+from authsources.abc.source import SourceAction
 from authsources.abc.actions import Challenge, Getter
 from authsources.json import JSONSchema
 
@@ -10,7 +11,9 @@ class DictUser(User):
         self.id = id
 
 
-class Fetch(Getter):
+class Fetch(SourceAction):
+
+    __protocols__ = (Getter,)
 
     schema = None
 
@@ -19,7 +22,9 @@ class Fetch(Getter):
             return self.source.usertype(id=username)
 
 
-class Login(Challenge):
+class Login(SourceAction):
+
+    __protocols__ = (Challenge,)
 
     schema = JSONSchema({
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -53,15 +58,13 @@ class Login(Challenge):
 
 class DictSource(Source):
 
-    actions = {
-        Challenge: Login
-    }
-
     def __init__(self, users: dict[str, str], *,
                  title: str,
                  description: str,
-                 usertype: t.Type[DictUser] = DictUser):
+                 usertype: t.Type[DictUser] = DictUser,
+                 actions: t.Iterable[SourceAction] | None = None):
         self.users = users
         self.title = title
         self.description = description
         self.usertype = usertype
+        self.define(actions)

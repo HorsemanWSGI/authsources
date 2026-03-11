@@ -1,89 +1,74 @@
-import abc
 import typing as t
-from authsources.abc.source import SourceAction
 from authsources.abc.identity import User, UserID
 
 
-class Preflight(SourceAction):
+class Preflight(t.Protocol):
 
-    @abc.abstractmethod
     def preflight(self):
         pass
 
 
-class Getter(SourceAction):
+class Getter(t.Protocol):
 
-    @abc.abstractmethod
     def get(self, uid: UserID) -> User | None:
         pass
 
 
-class Create(SourceAction):
+class Create(t.Protocol):
 
-    @abc.abstractmethod
     def create(self, data: dict):
         pass
 
 
-class Update(SourceAction):
+class Update(t.Protocol):
 
-    @abc.abstractmethod
     def update(self, uid: UserID, data: dict) -> bool:
         pass
 
 
-class Delete(SourceAction):
+class Delete(t.Protocol):
 
-    @abc.abstractmethod
     def delete(self, uid: UserID) -> bool:
         pass
 
 
-class Search(SourceAction):
+class Search(t.Protocol):
 
-    @abc.abstractmethod
     def search(
             self, criterions: dict, index: int = 0, size: int = 10
     ) -> t.Iterator[User]:
         pass
 
-    @abc.abstractmethod
     def count(self, criterions: dict) -> int:
         pass
 
 
-class Challenge(SourceAction):
+class Challenge(t.Protocol):
 
-    @abc.abstractmethod
     def challenge(self, credentials: dict) -> User | None:
         pass
 
 
-class ChangePassword(SourceAction):
+class ChangePassword(t.Protocol):
 
-    @abc.abstractmethod
     def change_password(
             self, userid: UserID, new_value: str | bytes) -> bool:
         pass
 
 
-class Groups(SourceAction):
+class Groups(t.Protocol):
 
-    @abc.abstractmethod
     def list_groups(self):
         pass
 
-    @abc.abstractmethod
     def list_user_groups(self, userid: UserID):
         pass
 
 
-class Group(SourceAction):
+class Group(t.Protocol):
 
-    @abc.abstractmethod
     def list_group_users(self, groupid: str):
         pass
 
-    @abc.abstractmethod
     def add_group_user(self, groupid, userid: UserID):
         pass

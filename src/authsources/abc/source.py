@@ -12,6 +12,7 @@ class SourceAction:
     schema: JSONSchema | None
     source: 'Source'
     request: RequestProtocol
+    __protocols__: t.Iterable[type[t.Protocol]]
 
     def __init__(self, source: "Source", request: RequestProtocol):
         self.source = source
@@ -21,10 +22,18 @@ class SourceAction:
 class Source(abc.ABC):
     title: str
     description: str
-    actions: dict[type[SourceAction], SourceAction]
-    usertype: t.Type[User]
+    usertype: type[User]
+    _actions: dict[type[SourceAction], SourceAction]
 
     def get_action(
             self, type_: type[SourceAction], request: RequestProtocol):
-        if (action := self.actions.get(type_)) is not None:
+        if (action := self._actions.get(type_)) is not None:
             return action(self, request)
+
+    def define(self, actions: t.Iterable[type[SourceAction]]):
+        defined = {}
+        if actions:
+            for action in actions:
+                for protocol in action.__protocols__:
+                    defined[protocol] = action
+        self._actions = defined
