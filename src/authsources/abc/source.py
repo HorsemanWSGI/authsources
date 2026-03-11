@@ -22,6 +22,7 @@ class Source(abc.ABC):
     title: str
     description: str
     actions: dict[type[SourceAction], SourceAction]
+    usertype: t.Type[User]
 
     def get_action(
             self, type_: type[SourceAction], request: RequestProtocol):

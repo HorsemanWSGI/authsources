@@ -57,3 +57,33 @@ class Challenge(SourceAction):
     @abc.abstractmethod
     def challenge(self, credentials: dict) -> User | None:
         pass
+
+
+class ChangePassword(SourceAction):
+
+    @abc.abstractmethod
+    def change_password(
+            self, userid: UserID, new_value: str | bytes) -> bool:
+        pass
+
+
+class Groups(SourceAction):
+
+    @abc.abstractmethod
+    def list_groups(self):
+        pass
+
+    @abc.abstractmethod
+    def list_user_groups(self, userid: UserID):
+        pass
+
+
+class Group(SourceAction):
+
+    @abc.abstractmethod
+    def list_group_users(self, groupid: str):
+        pass
+
+    @abc.abstractmethod
+    def add_group_user(self, groupid, userid: UserID):
+        pass

@@ -4,15 +4,19 @@ from authsources.abc.actions import Challenge, Getter
 from authsources.json import JSONSchema
 
 
+class DictUser(User):
+
+    def __init__(self, id: UserId):
+        self.id = id
+
+
 class Fetch(Getter):
 
     schema = None
 
     def get(self, uid: UserID) -> User | None:
         if uid in self.source.users:
-            user = User()
-            user.id = uid
-            return user
+            return self.source.usertype(id=username)
 
 
 class Login(Challenge):
@@ -41,9 +45,7 @@ class Login(Challenge):
             password = credentials.get("password")
             if username is not None and username in self.source.users:
                 if self.source.users[username] == password:
-                    user = User()
-                    user.id = username
-                    return user
+                    return self.source.usertype(id=username)
         else:
             # FixMe
             return None
@@ -57,7 +59,9 @@ class DictSource(Source):
 
     def __init__(self, users: dict[str, str], *,
                  title: str,
-                 description: str):
+                 description: str,
+                 usertype: t.Type[DictUser] = DictUser):
         self.users = users
         self.title = title
         self.description = description
+        self.usertype = usertype
