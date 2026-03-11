@@ -1,7 +1,18 @@
 from authsources.abc.source import Source
 from authsources.abc.identity import User, UserID
-from authsources.abc.actions import Challenge
+from authsources.abc.actions import Challenge, Getter
 from authsources.json import JSONSchema
+
+
+class Fetch(Getter):
+
+    schema = None
+
+    def get(self, uid: UserID) -> User | None:
+        if uid in self.source.users:
+            user = User()
+            user.id = uid
+            return user
 
 
 class Login(Challenge):
@@ -44,11 +55,9 @@ class DictSource(Source):
         Challenge: Login
     }
 
-    def __init__(self, users: dict[str, str]):
+    def __init__(self, users: dict[str, str], *,
+                 title: str,
+                 description: str):
         self.users = users
-
-    def get(self, uid: UserID) -> User | None:
-        if uid in self.users:
-            user = User()
-            user.id = uid
-            return user
+        self.title = title
+        self.description = description

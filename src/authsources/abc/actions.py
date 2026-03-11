@@ -11,6 +11,13 @@ class Preflight(SourceAction):
         pass
 
 
+class Getter(SourceAction):
+
+    @abc.abstractmethod
+    def get(self, uid: UserID) -> User | None:
+        pass
+
+
 class Create(SourceAction):
 
     @abc.abstractmethod

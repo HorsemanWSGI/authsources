@@ -27,7 +27,3 @@ class Source(abc.ABC):
             self, type_: type[SourceAction], request: RequestProtocol):
         if (action := self.actions.get(type_)) is not None:
             return action(self, request)
-
-    @abc.abstractmethod
-    def get(self, uid: UserID) -> User | None:
-        pass

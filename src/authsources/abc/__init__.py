@@ -3,6 +3,7 @@ import abc
 import uuid
 from authsources.abc.identity import User
 from authsources.abc.source import Source
+from authsources.abc.protocols import RequestProtocol
 
 
 class Authenticator(abc.ABC):
