@@ -1,10 +1,12 @@
 import typing as t
 from authsources.abc.identity import User, UserID
+from authsources.abc.protocols import RequestProtocol
+
 
 
 class Preflight(t.Protocol):
 
-    def preflight(self):
+    def preflight(self, request: RequestProtocol):
         pass
 
 
