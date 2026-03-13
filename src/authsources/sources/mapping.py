@@ -1,4 +1,4 @@
-from typing import TypedDict
+from typing import TypedDict, Iterable
 from authsources.abc.source import Source
 from authsources.abc.identity import User, UserID
 from authsources.abc.source import SourceAction
@@ -68,8 +68,8 @@ class DictSource(Source):
     def __init__(self, users: dict[str, UserData], *,
                  title: str,
                  description: str,
-                 usertype: t.Type[DictUser] = DictUser,
-                 actions: t.Iterable[SourceAction] | None = None):
+                 usertype: type[DictUser] = DictUser,
+                 actions: Iterable[SourceAction] | None = None):
         self.users = users
         self.title = title
         self.description = description
