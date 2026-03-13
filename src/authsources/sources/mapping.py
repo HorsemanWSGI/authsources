@@ -55,9 +55,10 @@ class Login(SourceAction):
             username = credentials.get("username")
             password = credentials.get("password")
             if username is not None:
-                if userdata := self.source.users.get(uid):
+                if userdata := self.source.users.get(username):
                     if userdata['password'] == password:
-                        return self.source.usertype(id=uid, data=userdata)
+                        return self.source.usertype(
+                            id=username, data=userdata)
         else:
             # FixMe
             return None
