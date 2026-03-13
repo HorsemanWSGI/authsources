@@ -12,7 +12,7 @@ class UserData(TypedDict, total=False):
 
 class DictUser(User):
 
-    def __init__(self, id: UserId, data: UserData):
+    def __init__(self, id: UserID, data: UserData):
         self.id = id
         self.data = data
 
