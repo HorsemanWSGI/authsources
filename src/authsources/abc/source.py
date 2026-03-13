@@ -1,36 +1,38 @@
 import abc
 import typing as t
+from copy import copy
 from authsources.abc.identity import User, UserID
 from authsources.json import JSONSchema
-from wrapt import ObjectProxy
 
 
 class SourceAction:
-    source: 'Source'
-    schema: JSONSchema | None
     __protocols__: t.ClassVar[t.Iterable[type[t.Protocol]]]
+
+    source: 'Source'
+    schema: JSONSchema | None = None
 
     def __init__(self, source: "Source"):
         self.source = source
 
 
-class BoundSource(ObjectProxy):
-    bindings: dict
-
-    def __init__(self, wrapped: "Source", bindings: dict):
-        super().__init__(wrapped)
-        self.bindings = bindings
-
-
-class Source(abc.ABC):
+class Source:
     title: str
     description: str
     usertype: type[User]
     _actions: dict[type[SourceAction], SourceAction]
 
-    @property
-    def bindings(self):
-        raise RuntimeError("Source is currently unbound")
+    def __init__(self, *,
+                 title,
+                 description,
+                 usertype,
+                 actions: t.Iterable[SourceAction] | None = None,
+                 bindings: t.Mapping | None = None
+                 ):
+        self.title = title
+        self.description = description
+        self.usertype = usertype
+        self.bindings = bindings if bindings is not None else {}
+        self.define(actions)
 
     def get(self, type_: type[SourceAction]):
         if (action := self._actions.get(type_)) is not None:
@@ -49,4 +51,6 @@ class Source(abc.ABC):
         self._actions = defined
 
     def bind(self, **bindings):
-        return BoundSource(self, bindings)
+        bound = copy(self)
+        bound.bindings = {**bound.bindings, **bindings}
+        return bound

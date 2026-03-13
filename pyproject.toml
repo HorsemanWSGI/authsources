@@ -13,6 +13,7 @@ classifiers = ["License :: OSI Approved :: MIT License"]
 dependencies = [
   "frozendict",
   "jsonschema_rs",
+  "wrapt",
 ]
 
 [project.optional-dependencies]
