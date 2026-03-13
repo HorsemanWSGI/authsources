@@ -1,3 +1,4 @@
+from typing import TypedDict
 from authsources.abc.source import Source
 from authsources.abc.identity import User, UserID
 from authsources.abc.source import SourceAction
@@ -5,10 +6,15 @@ from authsources.abc.actions import Challenge, Getter
 from authsources.json import JSONSchema
 
 
+class UserData(TypedDict, total=False):
+    password: str
+
+
 class DictUser(User):
 
-    def __init__(self, id: UserId):
+    def __init__(self, id: UserId, data: UserData):
         self.id = id
+        self.data = data
 
 
 class Fetch(SourceAction):
@@ -18,8 +24,8 @@ class Fetch(SourceAction):
     schema = None
 
     def get(self, uid: UserID) -> User | None:
-        if uid in self.source.users:
-            return self.source.usertype(id=username)
+        if userdata := self.source.users.get(uid):
+            return self.source.usertype(id=uid, data=userdata)
 
 
 class Login(SourceAction):
@@ -48,9 +54,10 @@ class Login(SourceAction):
         if not errors:
             username = credentials.get("username")
             password = credentials.get("password")
-            if username is not None and username in self.source.users:
-                if self.source.users[username] == password:
-                    return self.source.usertype(id=username)
+            if username is not None:
+                if userdata := self.source.users.get(uid):
+                    if userdata['password'] == password:
+                        return self.source.usertype(id=uid, data=userdata)
         else:
             # FixMe
             return None
@@ -58,7 +65,7 @@ class Login(SourceAction):
 
 class DictSource(Source):
 
-    def __init__(self, users: dict[str, str], *,
+    def __init__(self, users: dict[str, UserData], *,
                  title: str,
                  description: str,
                  usertype: t.Type[DictUser] = DictUser,
