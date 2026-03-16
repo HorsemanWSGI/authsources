@@ -1,7 +1,9 @@
 import typing as t
-from authsources.abc.identity import User, UserID
-from authsources.abc.protocols import RequestProtocol
+from authsources.identity import User, UserID
 
+
+class RequestProtocol(t.Protocol):
+    headers: dict
 
 
 class Preflight(t.Protocol):

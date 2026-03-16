@@ -1,9 +1,9 @@
 import typing as t
 import abc
 import uuid
-from authsources.abc.identity import User
-from authsources.abc.source import Source
-from authsources.abc.protocols import RequestProtocol
+from authsources.identity import User
+from authsources.source import Source
+from authsources.protocols import RequestProtocol
 
 
 class Authenticator(abc.ABC):
