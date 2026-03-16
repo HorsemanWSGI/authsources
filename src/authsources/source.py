@@ -1,7 +1,7 @@
 import abc
 import typing as t
 from copy import copy
-from authsources.abc.identity import User, UserID
+from authsources.identity import User, UserID
 from authsources.json import JSONSchema
 
 
