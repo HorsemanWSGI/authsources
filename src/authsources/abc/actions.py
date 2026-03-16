@@ -67,10 +67,25 @@ class Groups(t.Protocol):
         pass
 
 
-class Group(t.Protocol):
+class GroupCreate(t.Protocol):
+
+    def create_group(self, data: dict, parent: str | None) -> bool:
+        pass
+
+
+class GroupDelete(t.Protocol):
+
+    def delete_group(self, group_id: str) -> bool:
+        pass
+
+
+class GroupManage(t.Protocol):
 
     def list_group_users(self, groupid: str):
         pass
 
-    def add_group_user(self, groupid, userid: UserID):
+    def add_group_user(self, groupid: str, userid: str) -> bool:
+        pass
+
+    def remove_group_user(self, groupid: str, userid: str):
         pass
