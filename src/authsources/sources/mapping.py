@@ -1,8 +1,8 @@
 from typing import TypedDict, Iterable
-from authsources.abc.source import Source
-from authsources.abc.identity import User, UserID
-from authsources.abc.source import SourceAction
-from authsources.abc.actions import Challenge, Getter
+from authsources.source import Source
+from authsources.identity import User, UserID
+from authsources.source import SourceAction
+from authsources.protocols import Challenge, Getter
 from authsources.json import JSONSchema
 
 
