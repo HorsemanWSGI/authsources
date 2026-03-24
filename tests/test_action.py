@@ -1,7 +1,7 @@
 import pytest
 from typing import Protocol
-from authsources.abc.identity import User
-from authsources.abc.source import SourceAction, Source
+from authsources.identity import User
+from authsources.source import SourceAction, Source
 
 
 class MyUser(User):

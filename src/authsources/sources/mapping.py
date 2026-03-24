@@ -1,8 +1,8 @@
 from typing import TypedDict, Iterable
-from authsources.abc.source import Source
-from authsources.abc.identity import User, UserID
-from authsources.abc.source import SourceAction
-from authsources.abc.actions import Challenge, Getter
+from authsources.source import Source
+from authsources.identity import User, UserID
+from authsources.source import SourceAction
+from authsources.protocols import Challenge, Getter
 from authsources.json import JSONSchema
 
 
@@ -50,18 +50,13 @@ class Login(SourceAction):
     })
 
     def challenge(self, credentials: dict) -> User | None:
-        errors = list(self.schema.validate(credentials))
-        if not errors:
-            username = credentials.get("username")
-            password = credentials.get("password")
-            if username is not None:
-                if userdata := self.source.users.get(username):
-                    if userdata['password'] == password:
-                        return self.source.usertype(
-                            id=username, data=userdata)
-        else:
-            # FixMe
-            return None
+        self.schema.validate(credentials)
+        username = credentials["username"]
+        password = credentials["password"]
+        if username is not None:
+            if userdata := self.source.users.get(username):
+                if userdata['password'] == password:
+                    return self.source.usertype(id=username, data=userdata)
 
 
 class DictSource(Source):

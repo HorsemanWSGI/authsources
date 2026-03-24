@@ -1,7 +1,7 @@
 import abc
 import typing as t
 from copy import copy
-from authsources.abc.identity import User, UserID
+from authsources.identity import User, UserID
 from authsources.json import JSONSchema
 
 
@@ -38,9 +38,12 @@ class Source:
         if (action := self._actions.get(type_)) is not None:
             return action(self)
 
-    def __getitem__(self, type_: type[SourceAction]):
+    def __getitem__(self, type_: type[SourceAction]) -> SourceAction:
         action = self._actions[type_]
         return action(self)
+
+    def __contains__(self, type_: type[SourceAction]) -> bool:
+        return type_ in self._actions
 
     def define(self, actions: t.Iterable[type[SourceAction]]):
         defined = {}
