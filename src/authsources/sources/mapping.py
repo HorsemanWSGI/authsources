@@ -2,7 +2,7 @@ from typing import TypedDict, Iterable
 from authsources.source import Source
 from authsources.identity import User, UserID
 from authsources.source import SourceAction
-from authsources.protocols import Challenge, Getter
+from authsources.protocols import Challenge, Getter, Search
 from authsources.json import JSONSchema
 
 
@@ -26,6 +26,30 @@ class Fetch(SourceAction):
     def get(self, uid: UserID) -> User | None:
         if userdata := self.source.users.get(uid):
             return self.source.usertype(id=uid, data=userdata)
+
+
+class Search(source.SourceAction):
+
+    __protocols__ = (Search,)
+
+    schema = JSONSchema({
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "title": "User search",
+        "type": "object",
+        "properties": {
+            "username": {
+                "type": "string",
+                "description": "User username."
+            },
+        }
+    })
+
+    def count(self, criterions: dict) -> int:
+        return int(self.source.users)
+
+    def search(self, criterions: dict, index: int = 0, limit: int = 10):
+        users = list(self.source.users.values())
+        yield iter(users[index:index+limit])
 
 
 class Login(SourceAction):
