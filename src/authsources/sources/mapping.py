@@ -28,7 +28,7 @@ class Fetch(SourceAction):
             return self.source.usertype(id=uid, data=userdata)
 
 
-class Search(source.SourceAction):
+class Search(SourceAction):
 
     __protocols__ = (Search,)
 
@@ -45,11 +45,12 @@ class Search(source.SourceAction):
     })
 
     def count(self, criterions: dict) -> int:
-        return int(self.source.users)
+        return len(self.source.users)
 
     def search(self, criterions: dict, index: int = 0, limit: int = 10):
-        users = list(self.source.users.values())
-        yield iter(users[index:index+limit])
+        users = list(self.source.users.items())
+        for (username, userdata) in users[index:index+limit]:
+            yield self.source.usertype(id=username, data=userdata)
 
 
 class Login(SourceAction):
