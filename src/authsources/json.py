@@ -9,7 +9,7 @@ class ValidationErrors(Exception):
     errors: list[ValidationError]
 
     def __init__(self, *errors: ValidationError):
-        self.errors: List[ValidationError] = list(errors)
+        self.errors = errors
 
     def __iter__(self):
         return iter(self.errors)
