@@ -3,6 +3,7 @@ import typing as t
 from copy import copy
 from authsources.identity import User, UserID
 from authsources.json import JSONSchema
+from collections.abc import Hashable, MutableSet
 
 
 class SourceAction:
@@ -32,7 +33,11 @@ class Source:
         self.description = description
         self.usertype = usertype
         self.bindings = bindings if bindings is not None else {}
-        self.define(actions)
+        self._actions = {}
+        if actions:
+            for action in actions:
+                for protocol in action.__protocols__:
+                    self._actions[protocol] = action
 
     def get(self, type_: type[SourceAction]):
         if (action := self._actions.get(type_)) is not None:
@@ -45,13 +50,8 @@ class Source:
     def __contains__(self, type_: type[SourceAction]) -> bool:
         return type_ in self._actions
 
-    def define(self, actions: t.Iterable[type[SourceAction]]):
-        defined = {}
-        if actions:
-            for action in actions:
-                for protocol in action.__protocols__:
-                    defined[protocol] = action
-        self._actions = defined
+    def __iter__(self):
+        return iter(self._actions)
 
     def bind(self, **bindings):
         bound = copy(self)

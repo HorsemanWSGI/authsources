@@ -92,7 +92,9 @@ class DictSource(Source):
                  usertype: type[DictUser] = DictUser,
                  actions: Iterable[SourceAction] | None = None):
         self.users = users
-        self.title = title
-        self.description = description
-        self.usertype = usertype
-        self.define(actions)
+        super().__init__(
+            title=title,
+            description=description,
+            usertype=usertype,
+            actions=actions,
+        )

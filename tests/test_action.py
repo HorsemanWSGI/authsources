@@ -37,7 +37,16 @@ class MySource(Source):
     pass
 
 
-def test_source():
+def test_source_no_actions():
+    source = MySource(
+        title="test",
+        description="Test source",
+        usertype=MyUser
+    )
+    assert list(source) == []
+
+
+def test_source_action_multi_protocols():
     source = MySource(
         title="test",
         description="Test source",
@@ -53,7 +62,4 @@ def test_source():
     with pytest.raises(KeyError):
         action.something_else()
 
-    bound = source.bind(person="Thomas")
-    assert source is not bound
-    action = bound.get(MyOtherProtocol)
-    assert action.something_else() == "Thomas"
+    assert list(source) == [MyProtocol, MyOtherProtocol]
