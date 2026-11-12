@@ -91,3 +91,16 @@ class GroupManage(t.Protocol):
 
     def remove_group_user(self, groupid: str, userid: str):
         pass
+
+
+class MagicLink(t.Protocol):
+    """Issues a link logging an existing user in without credentials."""
+
+    def create_magic_link(
+            self, email: str, redirect_uri: str, *,
+            ttl: int | None = None) -> str:
+        """Returns the link for the user of ``email``, leading to
+        ``redirect_uri`` and valid for ``ttl`` seconds (source default
+        if None).  Raises ``authsources.errors.MagicLinkError``.
+        """
+        pass
