@@ -12,10 +12,14 @@ class Preflight(t.Protocol):
         pass
 
 
-class Getter(t.Protocol):
+class Fetch(t.Protocol):
 
     def get(self, uid: UserID) -> User | None:
         pass
+
+
+### backward compatibility
+Getter = Fetch
 
 
 class Create(t.Protocol):

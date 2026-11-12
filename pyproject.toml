@@ -4,12 +4,12 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "authsources"
-version = "0.5.dev0"
+version = "0.5"
 authors = [
     {name = "Souheil Chelfouh", email = "trollfot@gmail.com"},
 ]
+license = "MIT"
 requires-python = ">=3.11"
-classifiers = ["License :: OSI Approved :: MIT License"]
 dependencies = [
   "frozendict",
   "jsonschema_rs",
